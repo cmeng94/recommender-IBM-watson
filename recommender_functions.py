@@ -8,12 +8,18 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
 def email_mapper(df):
+    '''
+    INPUT:
+    df - dataframe with user-article interactions with email column
+
+    OUTPUT:
+    email_encoded - column where email is encoded by user ids
+    '''
     coded_dict = dict()
     cter = 1
     email_encoded = []
@@ -30,11 +36,11 @@ def email_mapper(df):
 def tokenize(text):
 
     '''
-    The function tokenizes input text.
-    Input:
-    text: text to be tokenized
-    Output:
-    tokens: tokens of input text, transfomations include:
+    INPUT:
+    text - text to be tokenized
+
+    OUTPUT:
+    tokens - tokens of input text using the following transformations:
         1) replacing urls with placeholder
         2) normalization
         3) removing punctuations
@@ -66,26 +72,54 @@ def create_user_item_matrix(df):
     user_item - user item matrix 
     
     Description:
-    Return a matrix with user ids as rows and article ids on the columns with 1 values where a user interacted with 
+    Returns a matrix with user ids as rows and article ids on the columns with 1 values where a user interacted with 
     an article and a 0 otherwise
     '''
-    # Fill in the function here
     
     user_item = df.pivot_table(index=['user_id'], columns=['article_id'], aggfunc=lambda x: 1, fill_value=0)
     user_item.columns = [x[1] for x in user_item.columns]
     
-    return user_item # return the user_item matrix 
+    return user_item 
+
+def create_docs_matrix(df, df_content):
+    '''
+    INPUT:
+    df - dataframe with user-article interactions
+    df_content - dataframe with article id and contents
+
+    OUTPUT:
+    df_docs - dataframe that contains all articles in df and df_content, with the following columns:
+                  article_id
+                  title
+                  num_interactions: number of times the article is read
+              sorted by descending num_interactions then ascending article_id
+    '''
+
+    df1 = df[['article_id','title']]
+    df2 = df_content[['article_id','doc_full_name']]
+    df2.columns = ['article_id','title']
+
+    df_docs = pd.concat([df1, df2], ignore_index=True)
+    df_docs.drop_duplicates(subset='article_id', keep='first', inplace=True)
+    df_docs.sort_values(by='article_id', inplace=True)
+    df_docs.reset_index(drop=True, inplace=True)
+
+    num_interactions = dict.fromkeys(df_docs['article_id'],0)
+    for _id in df['article_id']:
+        num_interactions[_id] += 1
+
+    df_docs['num_interactions'] = df_docs['article_id'].apply(lambda x: num_interactions[x])  
+    return df_docs  
 
 
 def get_article_names(article_ids, df_docs):
     '''
     INPUT:
-    article_ids - (list) a list of article ids
-    df - (pandas dataframe) df as defined at the top of the notebook
+    article_ids - list of article ids
+    df_docs - dataframe returned by "create_docs_matrix"
     
     OUTPUT:
-    article_names - (list) a list of article names associated with the list of article ids 
-                    (this is identified by the title column)
+    article_names - list of article names associated with the input list of article ids 
     '''
 
     article_names = []
@@ -98,20 +132,16 @@ def get_article_names(article_ids, df_docs):
 def get_top_articles(df, df_docs, num_recs=10):
     '''
     INPUT:
-    n - (int) the number of top articles to return
-    df - (pandas dataframe) df as defined at the top of the notebook 
+    n -  the number of top articles to return
+    df - dataframe with user-article interactions
+    df_docs - dataframe returned by "create_docs_matrix" function
     
     OUTPUT:
-    top_articles_ids - (list) A list of ids of the top 'n' article titles 
-    top_articles - (list) A list of names of the top 'n' article titles 
-    
+    top_articles_ids - list of ids of the top n article titles 
+    top_articles - list of titles of the top n article titles 
     '''
-    # Your code here
     top_article_ids = df.groupby('article_id').size().sort_values(ascending=False).head(num_recs).index
-    top_articles = get_article_names(top_article_ids, df_docs)
-    # top_articles = []
-    # for _id in article_ids:
-    #     top_articles.append(df_docs[df_docs['article_id']==_id]['title'].values[0])    
+    top_articles = get_article_names(top_article_ids, df_docs) 
     
     return top_article_ids, top_articles
 
@@ -119,17 +149,16 @@ def get_top_articles(df, df_docs, num_recs=10):
 def get_user_article_ids(user_id, user_item):
     '''
     INPUT:
-    user_id - (int) a user id
-    user_item - (pandas dataframe) matrix of users by articles: 
-                1's when a user has interacted with an article, 0 otherwise
+    user_id - user id
+    user_item - user item matrix returned by "create_user_item_matrix" function
+                has 1's when a user has interacted with an article, 0 otherwise
     
     OUTPUT:
-    article_ids - (list) a list of the article ids seen by the user
-    article_names - (list) a list of article names associated with the list of article ids 
-                    (this is identified by the doc_full_name column in df_content)
+    article_ids - list of the article ids seen by the user
+    article_names - list of article names seen by the user
     
     Description:
-    Provides a list of the article_ids and article titles that have been seen by a user
+    Returns a list of the article_ids and article titles that have been seen by a user
     '''
 
     user_row = user_item.loc[user_id]
@@ -141,21 +170,17 @@ def get_user_article_ids(user_id, user_item):
 def get_top_sorted_users(user_id, user_item):
     '''
     INPUT:
-    user_id - (int)
-    df - (pandas dataframe) df as defined at the top of the notebook 
-    user_item - (pandas dataframe) matrix of users by articles: 
-            1's when a user has interacted with an article, 0 otherwise
-    
+    user_id - user id
+    df - dataframe with user-article interactions
+    user_item - user item matrix returned by "create_user_item_matrix" function
+                has 1's when a user has interacted with an article, 0 otherwise
             
     OUTPUT:
-    neighbors_df - (pandas dataframe) a dataframe with:
-                    neighbor_id - is a neighbor user_id
-                    similarity - measure of the similarity of each user to the provided user_id
-                    num_interactions - the number of articles viewed by the user 
-                    
-    Other Details - sort the neighbors_df by the similarity and then by number of interactions where 
-                    highest of each is higher in the dataframe
-     
+    neighbors_df - dataframe with:
+                       neighbor_id - is a neighbor user_id
+                       similarity - measure of the similarity of each user to the provided user_id
+                       num_interactions - the number of articles viewed by the user 
+                   Sorted by descending similarity and descending num_interactions
     '''
     
     neighbors_df = pd.DataFrame(data={'neighbor_id': user_item.index})
@@ -170,25 +195,24 @@ def get_top_sorted_users(user_id, user_item):
 def make_user_user_recs(user_id, user_item, df_docs, top_articles, num_recs=10):
     '''
     INPUT:
-    user_id - (int) a user id
-    num_recs - (int) the number of recommendations you want for the user
+    user_id - user id
+    df_docs - dataframe returned by "create_docs_matrix" function
+    top_articles - list of all articles with decreasing number of times read
+    num_recs - the number of recommendations for the user (default is 10)
     
     OUTPUT:
-    recs - (list) a list of recommendations for the user by article id
-    rec_names - (list) a list of recommendations for the user by article title
+    rec_ids - list of recommendations for the user by article id
+    rec_names - list of recommendations for the user by article title
     
     Description:
-    Loops through the users based on closeness to the input user_id
-    For each user - finds articles the user hasn't seen before and provides them as recs
-    Does this until num_recs recommendations are found
+    Loops through the users with a positive semilarity to the input user in the order of decreasing similarity.
+    For each user, finds articles the user hasn't seen before and provides them as recs.
+    Does this until num_recs recommendations are found.
     
     Notes:
-    * Choose the users that have the most total article interactions 
-    before choosing those with fewer article interactions.
-
-    * Choose articles with the most total interactions 
-    before choosing those with fewer total interactions. 
-   
+    * Users that have the most total article interactions are chosen before those with fewer article interactions.
+    * Articles with the most total interactions are chosen before those with fewer total interactions. 
+    * If less than num_recs articles are found, the rest is filled with most popular articles.
     '''
     
     user_articles = set(get_user_article_ids(user_id, user_item))
@@ -218,7 +242,13 @@ def make_user_user_recs(user_id, user_item, df_docs, top_articles, num_recs=10):
 
 
 def create_article_content_matrix(df_docs):
+    '''
+    INPUT:
+    df_docs - dataframe returned by "create_docs_matrix" function    
 
+    OUTPUT:
+    df_cont_transf - dataframe with article_id as index, and titles transformed by sklearn's tfidfvectorizer.
+    '''
     
     vectorizer = TfidfVectorizer(tokenizer=tokenize)
     matrix = vectorizer.fit_transform(df_docs['title'])
@@ -229,6 +259,20 @@ def create_article_content_matrix(df_docs):
     return df_cont_transf
 
 def make_content_recs(article_id, df_docs, num_recs=10):
+    '''
+    INPUT:
+    article_id: article id
+    df_docs - dataframe returned by "create_docs_matrix" function    
+    num_recs - the number of recommendations for the article (default is 10)
+
+    OUTPUT:
+    rec_ids - list of articles ids of most similar articles to input article
+    rec_names - list of articles names of most similar articles to input article
+
+    Description:
+    Return articles that are most similar to the input article. 
+    Results are sorted by decreasing similarity and decreasing num_interactions.
+    '''
 
     df_cont_transf = create_article_content_matrix(df_docs)
 
