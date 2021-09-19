@@ -20,11 +20,11 @@ In this project, three types of recommender systems are implemented:
 ## 2. Class Description
 The Recommender Class is built upon interactions that users have with articles on the IBM Watson Studio platform. The class has 2 functions and 8 attributes.
 
-CLASS FUNCTIONS:
+**Class Functions**:
 1. `fit(interactions_pth, articles_pth)`: fits recommender on input data sets and assigns values to class attribute.
 2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article
 
-CLASS ATTRIBUTES:
+**Class Attributes**:
 1. `n_users`:         total number of users in the data base
 2. `all_user_ids`:    list of length n_users containing all user ids 
 3. `n_articles`:      total number of articles in the data base
