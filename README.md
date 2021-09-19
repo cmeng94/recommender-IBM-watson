@@ -24,6 +24,12 @@ The Recommender Class is built upon interactions that users have with articles o
 1. `fit(interactions_pth, articles_pth)`: fits recommender on input data sets and assigns values to class attribute.
 2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article
 
+The recommender function `Recommender.make_recs` works as follows.
+* When a user ID is input, recommendations are made using
+     * Collaborative Filtering if the user exists in the database, and
+     * Rank Based recommender if the user is new to the database.
+* When an article ID is input, articles that are most similar to the input article are returned using Content Based recommender.
+
 **Class Attributes**:
 1. `n_users`:         total number of users in the data base
 2. `all_user_ids`:    list of length n_users containing all user ids 
@@ -35,6 +41,7 @@ The Recommender Class is built upon interactions that users have with articles o
 6. `top_5_articles`:  5 most popular article ids and article names
 7. `top_10_articles`: 10 most popular article ids and article names
 8. `top_20_articles`: 20 most popular article ids and article names
+
 
 <a id='start'></a>
 ## 3. Getting Started
