@@ -41,6 +41,10 @@ The Recommender Class is built upon interactions that users have with articles o
 
 <a id='contact'></a>
 ## 4. Contact
+**Chang Meng**
+* Email: chang_meng@live.com
+* Website: [https://sites.google.com/view/changmeng](https://sites.google.com/view/changmeng)
 
 <a id='acknowledge'></a>
 ## 5. Acknowledgement and Licensing
+This project is part of the [Data Science Nanodegree](https://www.udacity.com/course/data-scientist-nanodegree--nd025) program at [Udacity](https://www.udacity.com/). User and article data sets are provided by [IBM Watson Studio](https://www.ibm.com/cloud/watson-studio).
