@@ -25,14 +25,14 @@ CLASS FUNCTIONS:
 2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article
 
 CLASS ATTRIBUTES:
-1. `n_users`: total number of users in the data base
-2. `all_user_ids`: list of length n_users containing all user ids 
-3. `n_articles`: total number of articles in the data base
+1. `n_users`:         total number of users in the data base
+2. `all_user_ids`:    list of length n_users containing all user ids 
+3. `n_articles`:      total number of articles in the data base
 4. `all_article_ids`: list of length n_articles containing all article ids
 5. `top_articles`: 
-    - `top_articles`[0]: list of all article ids with decreasing popularity
-    - `top_articles`[1]: list of all article names with decreasing popularity
-6. `top_5_articles`: 5 most popular article ids and article names
+    - top_articles[0]: list of all article ids with decreasing popularity
+    - top_articles[1]: list of all article names with decreasing popularity
+6. `top_5_articles`:  5 most popular article ids and article names
 7. `top_10_articles`: 10 most popular article ids and article names
 8. `top_20_articles`: 20 most popular article ids and article names
 
