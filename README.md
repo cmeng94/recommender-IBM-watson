@@ -45,6 +45,25 @@ The recommender function `Recommender.make_recs` works as follows.
 
 <a id='start'></a>
 ## 3. Getting Started
+### Dependencies
+The code is developed with Python 3.9 and is dependent on a number of python packages listed in `requirements.txt`. To install required packages, run the following line in terminal:
+```sh
+pip3 install -r requirements.txt
+```
+
+### Installation
+To run the code locally, create a copy of this GitHub repository by running the following code in terminal:
+```sh
+git clone https://github.com/cmeng94/recommender-IBM-watson
+```
+
+### Execution
+The package can be accessed both in the terminal using command line arguments and inside python code as a module.
+
+`Command Line`
+
+`Inside Python`
+
 
 <a id='contact'></a>
 ## 4. Contact
