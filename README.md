@@ -83,7 +83,7 @@ The package can be accessed both in the terminal using command line arguments an
         ```
     * make ***num*** recommendations for article with ***article_id***:
         ```sh
-        article_recs = rec.make_recs(article_id, num_recs=num)
+        article_recs = rec.make_recs(article_id, 'article', num)
         ```
 
 
