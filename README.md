@@ -22,7 +22,7 @@ The Recommender Class is built upon interactions that users have with articles o
 
 **Class Functions**:
 1. `fit(interactions_pth, articles_pth)`: fits recommender on input data sets and assigns values to class attribute.
-2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article
+2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article.
 
 The recommender function `Recommender.make_recs` works as follows.
 * When a user ID is input, recommendations are made using
@@ -58,11 +58,33 @@ git clone https://github.com/cmeng94/recommender-IBM-watson
 ```
 
 ### Execution
-The package can be accessed both in the terminal using command line arguments and inside python code as a module.
+The package can be accessed both in the terminal using command line arguments and inside python code as a module. 
 
-`Command Line`
+* **Command Line**
+    * To make ***num*** recommendations for user with ***user_id***:
+    ```sh
+    python3 recommender.py user_id num
+    ```
+    * To make ***num*** recommendations for article with ***article_id***:
+    ```sh
+    python3 recommender.py article_id article num
+    ```
 
-`Inside Python`
+* **Inside Python**, first execute the following code
+```sh
+import Recommender as r
+rec = Recommender()
+rec.fit("data/user-item-interactions.csv", "articles_community.csv")
+```
+Then, to 
+    * make ***num*** recommendations for user with ***user_id***:
+    ```sh
+    user_recs = rec.make_recs(user_id, num_recs=num)
+    ```
+    * make ***num*** recommendations for article with ***article_id***:
+    ```sh
+    article_recs = rec.make_recs(article_id, num_recs=num)
+    ```
 
 
 <a id='contact'></a>
