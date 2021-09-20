@@ -78,7 +78,7 @@ The package can be accessed both in the terminal using command line arguments an
     Then, fit the recommender to the provided data sets
     ```sh
     rec.fit("data/user-item-interactions.csv", "articles_community.csv")
-    sss
+    ```
 
     To 
     * make ***num*** recommendations for user with ***user_id***:
