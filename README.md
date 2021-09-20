@@ -71,20 +71,20 @@ The package can be accessed both in the terminal using command line arguments an
     ```
 
 * **Inside Python**, first execute the following code
-```sh
-import Recommender as r
-rec = Recommender()
-rec.fit("data/user-item-interactions.csv", "articles_community.csv")
-```
-Then, to 
-    * make ***num*** recommendations for user with ***user_id***:
     ```sh
-    user_recs = rec.make_recs(user_id, num_recs=num)
+    import Recommender as r
+    rec = Recommender()
+    rec.fit("data/user-item-interactions.csv", "articles_community.csv")
     ```
-    * make ***num*** recommendations for article with ***article_id***:
-    ```sh
-    article_recs = rec.make_recs(article_id, num_recs=num)
-    ```
+    Then, to 
+        * make ***num*** recommendations for user with ***user_id***:
+        ```sh
+        user_recs = rec.make_recs(user_id, num_recs=num)
+        ```
+        * make ***num*** recommendations for article with ***article_id***:
+        ```sh
+        article_recs = rec.make_recs(article_id, num_recs=num)
+        ```
 
 
 <a id='contact'></a>
