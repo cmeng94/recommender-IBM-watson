@@ -70,13 +70,17 @@ The package can be accessed both in the terminal using command line arguments an
     python3 recommender.py article_id article num
     ```
 
-* **Inside Python**, first execute the following code
+* **Inside Python**, first import and define recommender by executing the following code
     ```sh
     import Recommender as r
     rec = Recommender()
-    rec.fit("data/user-item-interactions.csv", "articles_community.csv")
     ```
-    Then, to 
+    Then, fit the recommender to the provided data sets
+    ```sh
+    rec.fit("data/user-item-interactions.csv", "articles_community.csv")
+    sss
+
+    To 
     * make ***num*** recommendations for user with ***user_id***:
         ```sh
         user_recs = rec.make_recs(user_id, num_recs=num)
