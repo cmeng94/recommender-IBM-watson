@@ -77,11 +77,11 @@ The package can be accessed both in the terminal using command line arguments an
     rec.fit("data/user-item-interactions.csv", "articles_community.csv")
     ```
     Then, to 
-        * make ***num*** recommendations for user with ***user_id***:
+    * make ***num*** recommendations for user with ***user_id***:
         ```sh
         user_recs = rec.make_recs(user_id, num_recs=num)
         ```
-        * make ***num*** recommendations for article with ***article_id***:
+    * make ***num*** recommendations for article with ***article_id***:
         ```sh
         article_recs = rec.make_recs(article_id, num_recs=num)
         ```
