@@ -31,7 +31,7 @@ class Recommender():
         no required attributes
         '''
 
-    def fit(self, interactions_pth, articles_pth):
+    def fit(self, interactions_pth, articles_pth, num_lat=2):
         '''
         INPUT:
         interactions_pth - path to data set containing entries of all user-article interaction
@@ -78,6 +78,11 @@ class Recommender():
         self.top_10_articles = self.top_articles[:10]
         self.top_20_articles = self.top_articles[:20]
 
+        # save latent features for use in make_recs
+        u, s, vt = np.linalg.svd(self.user_item)
+        self.s_lat, self.u_lat, self.vt_lat = np.diag(s[:num_lat]), u[:, :num_lat], vt[:num_lat, :]
+
+
     def make_recs(self, _id, id_type='user', num_recs=10):
         '''
         INPUT:
@@ -95,8 +100,26 @@ class Recommender():
         if id_type == 'user':
             _id = int(float(_id))
             if _id in self.all_user_ids:
-                rec_ids, rec_names = rf.make_user_user_recs(_id, self.user_item, self.df_docs, 
-                                                            self.top_articles, num_recs)
+
+                user_idx = np.where(self.user_item.index == _id)[0][0]
+                art_idx = np.where(np.around(np.dot(np.dot(self.u_lat[user_idx,:], self.s_lat), self.vt_lat))==1)
+                rec_ids = list(set(self.user_item.columns[art_idx]) - set(rf.get_user_article_ids(_id, self.user_item)))
+                article_order = self.top_articles[0]
+                article_order = {art:idx for idx, art in enumerate(article_order)}
+                rec_ids.sort(key=article_order.get)
+
+                rec_ids_2 = rf.make_user_user_recs(_id, self.user_item, self.df_docs, 
+                                                            self.top_articles, num_recs)[0]
+                
+                for rec_id in rec_ids_2:
+                	if len(rec_ids) >= num_recs:
+                		break
+                	if rec_id not in rec_ids:
+                		rec_ids.append(rec_id)
+
+                rec_ids = rec_ids[:num_recs]
+                rec_names = rf.get_article_names(rec_ids, self.df_docs)
+
             else:
                 rec_ids, rec_names = self.top_articles
                 rec_ids = rec_ids[:num_recs]

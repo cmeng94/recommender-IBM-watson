@@ -11,23 +11,23 @@
 ## 1. Project Description
 For this project, we analyze the interactions that users have with articles on the IBM Watson Studio platform, and make recommendations to them about new articles they might like. The deliverable of this project is a Recommender Class that can be called within a Python script or function to make recommendations.
 
-In this project, three types of recommender systems are implemented:
+In this project, four types of recommender systems are implemented:
 * Rank Based Recommender,
-* Collaborative Filtering Recommender, and
-* Content Based Recommender.
+* Collaborative Filtering Recommender, 
+* Content Based Recommender, and
+* Matrix Factorization Recommender.
 
 <a id='class'></a>
 ## 2. Class Description
-The Recommender Class is built upon interactions that users have with articles on the IBM Watson Studio platform. The class has 2 functions and 8 attributes.
+The Recommender Class is built upon interactions that users have with articles on the IBM Watson Studio platform. The class has 2 functions and 13 attributes.
 
 **Class Functions**:
 1. `fit(interactions_pth, articles_pth)`: fits recommender on input data sets and assigns values to class attribute.
 2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article.
 
 The recommender function `Recommender.make_recs` works as follows.
-* When a user ID is input, recommendations are made using
-     * **Collaborative Filtering** if the user exists in the database, and
-     * **Rank Based** recommender if the user is new to the database.
+* When a known user ID is input, recommendations are first made using **Matrix Factorization**. If **num_recs*** is not reached, then **Collaborative Filtering** is used.
+* When an unknown user ID is input, **Rank Based** recommender is used.
 * When an article ID is input, articles that are most similar to the input article are returned using **Content Based** recommender.
 
 **Class Attributes**:
@@ -41,6 +41,11 @@ The recommender function `Recommender.make_recs` works as follows.
 6. `top_5_articles`:  5 most popular article ids and article names
 7. `top_10_articles`: 10 most popular article ids and article names
 8. `top_20_articles`: 20 most popular article ids and article names
+9. `user_item`:
+10. `df_docs`:
+11. `u_lat`: U part 
+12. `s_lat`:
+13. `vt_lat`:
 
 
 <a id='start'></a>
@@ -58,7 +63,7 @@ git clone https://github.com/cmeng94/recommender-IBM-watson
 ```
 
 ### Execution
-The package can be accessed both in the terminal using command line arguments and inside python code as a module. 
+The package can be accessed both in the terminal using command line arguments and inside python code as a module. You need to be located inside the `recommender-IBM-watson` directory to run the code below.
 
 * **Command Line**
     * To make ***num*** recommendations for user with ***user_id***:
@@ -72,12 +77,12 @@ The package can be accessed both in the terminal using command line arguments an
 
 * **Inside Python**, first import and define recommender by executing the following code
     ```sh
-    import Recommender as r
+    from recommender import Recommender
     rec = Recommender()
     ```
     Then, fit the recommender to the provided data sets
     ```sh
-    rec.fit("data/user-item-interactions.csv", "articles_community.csv")
+    rec.fit("data/user-item-interactions.csv", "data/articles_community.csv")
     ```
 
     To 

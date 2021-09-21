@@ -163,6 +163,7 @@ def get_user_article_ids(user_id, user_item):
 
     user_row = user_item.loc[user_id]
     article_ids = (user_row[user_row == 1]).index
+    article_ids = list(article_ids)
         
     return article_ids
 
