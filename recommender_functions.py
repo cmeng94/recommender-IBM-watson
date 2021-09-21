@@ -72,7 +72,7 @@ def create_user_item_matrix(df):
     user_item - user item matrix 
     
     Description:
-    Returns a matrix with user ids as rows and article ids on the columns with 1 values where a user interacted with 
+    Returns a matrix with user ids as rows and article ids on the columns having 1 values where a user interacted with 
     an article and a 0 otherwise
     '''
     

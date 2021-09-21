@@ -37,6 +37,7 @@ class Recommender():
         interactions_pth - path to data set containing entries of all user-article interaction
                            each row represents an article is read by a user
         articles_pth - path to data set containing titles and contents of articles
+        num_lat - number of latent features for matrix factorization
 
         OUTPUT:
         None

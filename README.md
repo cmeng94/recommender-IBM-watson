@@ -22,11 +22,11 @@ In this project, four types of recommender systems are implemented:
 The Recommender Class is built upon interactions that users have with articles on the IBM Watson Studio platform. The class has 2 functions and 13 attributes.
 
 **Class Functions**:
-1. `fit(interactions_pth, articles_pth)`: fits recommender on input data sets and assigns values to class attribute.
+1. `fit(interactions_pth, articles_pth, num_lat=2)`: fits recommender on input data sets and assigns values to class attribute.
 2. `make_recs(_id, id_type='user', num_recs=10)`: make recommendations for input user or article.
 
 The recommender function `Recommender.make_recs` works as follows.
-* When a known user ID is input, recommendations are first made using **Matrix Factorization**. If **num_recs*** is not reached, then **Collaborative Filtering** is used.
+* When a known user ID is input, recommendations are first made using **Matrix Factorization**. If `num_recs` is not reached, then **Collaborative Filtering** is used.
 * When an unknown user ID is input, **Rank Based** recommender is used.
 * When an article ID is input, articles that are most similar to the input article are returned using **Content Based** recommender.
 
@@ -41,11 +41,12 @@ The recommender function `Recommender.make_recs` works as follows.
 6. `top_5_articles`:  5 most popular article ids and article names
 7. `top_10_articles`: 10 most popular article ids and article names
 8. `top_20_articles`: 20 most popular article ids and article names
-9. `user_item`:
-10. `df_docs`:
-11. `u_lat`: U part 
-12. `s_lat`:
-13. `vt_lat`:
+9. `user_item`: matrix with user ids as rows and article ids on the columns having 1 values where a user interacted with 
+    an article and a 0 otherwise
+10. `df_docs`: dataframe that contains all article information from both input paths
+11. `u_lat`: U part of the SVD decomposition of `user_item` truncated to rank num_lat
+12. `s_lat`: S part of the SVD decomposition of `user_item` truncated to rank num_lat
+13. `vt_lat`: Vt part of the SVD decomposition of `user_item` truncated to rank num_lat
 
 
 <a id='start'></a>
